@@ -702,4 +702,222 @@ button {
     min-height: 100vh;
     border-radius: 0;
   }
+}/* PLAYFUL DASHBOARD REFRESH */
+
+.phone {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(255, 221, 112, 0.35), transparent 18%),
+    radial-gradient(circle at 85% 18%, rgba(255, 147, 190, 0.32), transparent 20%),
+    radial-gradient(circle at 15% 88%, rgba(137, 235, 216, 0.28), transparent 22%),
+    linear-gradient(180deg, #fff8fc 0%, #fff1f8 100%);
+}
+
+.top-header {
+  padding-bottom: 14px;
+}
+
+.top-header::after {
+  content: "🌈";
+  position: absolute;
+  right: 72px;
+  top: 18px;
+  font-size: 28px;
+  transform: rotate(-12deg);
+}
+
+.brand-row h1 {
+  text-shadow: 0 3px 0 rgba(255, 205, 222, 0.8);
+}
+
+.subtitle::after {
+  content: "  ·  tiny home control center";
+  color: #ff7ba5;
+}
+
+.dashboard {
+  display: grid;
+  gap: 12px;
+}
+
+.wide-dashboard-list {
+  gap: 12px;
+}
+
+.wide-card {
+  position: relative;
+  min-height: 108px;
+  border-radius: 28px;
+  padding: 15px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow:
+    0 14px 28px rgba(143, 58, 91, 0.12),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+}
+
+.wide-card::before {
+  content: "";
+  position: absolute;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  right: -28px;
+  top: -24px;
+  background: rgba(255, 255, 255, 0.38);
+}
+
+.wide-card::after {
+  position: absolute;
+  right: 18px;
+  bottom: 12px;
+  font-size: 22px;
+  opacity: 0.75;
+}
+
+.todo-wide-card {
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.48), transparent 35%),
+    linear-gradient(135deg, #bff8ea, #fffef8);
+}
+
+.todo-wide-card::after {
+  content: "⭐";
+}
+
+.chores-wide-card {
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.48), transparent 35%),
+    linear-gradient(135deg, #ffc1d5, #fff5df);
+}
+
+.chores-wide-card::after {
+  content: "🧺";
+}
+
+.home-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 30% 20%, #ffffff, transparent 35%),
+    #ffe1ec;
+  box-shadow: 0 8px 16px rgba(143, 58, 91, 0.1);
+}
+
+.wide-card-heading h2,
+.next-card h2,
+.meal-card-wide h2,
+.notes-header h2 {
+  font-size: 17px;
+  letter-spacing: -0.3px;
+}
+
+.wide-card-heading span,
+.next-card p,
+.meal-card-wide p,
+.notes-header p {
+  font-size: 11.5px;
+}
+
+.mini-list {
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 16px;
+  padding: 8px 10px;
+}
+
+.mini-list p {
+  position: relative;
+  padding-left: 14px;
+}
+
+.mini-list p::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #ff6f9f;
+}
+
+.next-card,
+.meal-card-wide,
+.dashboard-notes {
+  border-radius: 28px;
+  padding: 15px;
+  min-height: 94px;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 14px 28px rgba(143, 58, 91, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+}
+
+.next-card {
+  background:
+    radial-gradient(circle at 88% 20%, rgba(255, 255, 255, 0.65), transparent 30%),
+    linear-gradient(135deg, #fff0a9, #fffdf5);
+}
+
+.meal-card-wide {
+  background:
+    radial-gradient(circle at 88% 20%, rgba(255, 255, 255, 0.65), transparent 30%),
+    linear-gradient(135deg, #d7fff1, #fffdf8);
+}
+
+.dashboard-notes {
+  background:
+    radial-gradient(circle at 90% 15%, rgba(255, 226, 128, 0.45), transparent 24%),
+    linear-gradient(135deg, #fff7fb, #fff0f7);
+}
+
+.notes-header > span {
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 30% 20%, #ffffff, transparent 35%),
+    #fff0c6;
+}
+
+.note-bubbles {
+  grid-template-columns: 1fr;
+}
+
+.note-bubble {
+  border-radius: 20px;
+  background: #ffffff;
+  border: 2px dashed #ffd4e4;
+  box-shadow: 0 6px 14px rgba(143, 58, 91, 0.06);
+}
+
+.family-doodle {
+  color: #ff6f9f;
+  font-size: 32px;
+  font-weight: 900;
+}
+
+.page-title {
+  background: rgba(255, 255, 255, 0.55);
+  padding: 10px;
+  border-radius: 24px;
+  border: 1px solid #ffe0ec;
+}
+
+.page-icon {
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 30% 20%, #ffffff, transparent 35%),
+    #ffe1ec;
+}
+
+.list-item {
+  border-radius: 22px;
+  border: 1px solid #ffe0ec;
+}
+
+.add-box input,
+.mini-field,
+.edit-row input,
+.edit-row select {
+  border: 1px solid #ffe0ec;
+}
+
+.bottom-nav {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
 }
