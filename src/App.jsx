@@ -585,7 +585,7 @@ export default function App() {
               <span className="brand-star">✨</span>
             </div>
 
-            <p className="subtitle">Your family dashboard</p>
+            <p className="subtitle">What do we have today?</p>
 
             <div className="mini-stickers">
               <span>☁️</span>

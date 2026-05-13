@@ -729,11 +729,6 @@ button {
   text-shadow: 0 3px 0 rgba(255, 205, 222, 0.8);
 }
 
-.subtitle::after {
-  content: "  ·  tiny home control center";
-  color: #ff7ba5;
-}
-
 .dashboard {
   display: grid;
   gap: 12px;
@@ -920,4 +915,58 @@ button {
 .bottom-nav {
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(10px);
+}/* FIX HEADER ALIGNMENT */
+
+.top-header {
+  padding: 18px 22px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.brand-copy {
+  width: calc(100% - 58px);
+  text-align: left;
+}
+
+.greeting {
+  text-align: left;
+  margin: 0 0 4px;
+  font-size: 12px;
+}
+
+.brand-row {
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.top-header h1 {
+  text-align: left;
+  margin: 0;
+}
+
+.subtitle {
+  text-align: left;
+  margin-top: 6px;
+  max-width: 240px;
+  line-height: 1.25;
+}
+
+.subtitle::after {
+  content: "";
+}
+
+.top-header::after {
+  right: 76px;
+  top: 24px;
+  font-size: 24px;
+}
+
+.profile {
+  flex: 0 0 auto;
+  margin-top: 8px;
+}
+
+.mini-stickers {
+  justify-content: flex-start;
 }
