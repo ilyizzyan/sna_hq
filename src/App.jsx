@@ -22,7 +22,7 @@ const startingData = {
   meals: ["Lunch: Chicken soup", "Dinner: Fried rice"],
   kids: ["Practised writing name", "Asked why the moon changes shape"],
   wins: ["Survived a no-screen evening", "Made a family plan"],
-  notes: ["things to pack"],
+  notes: ["Things to pack"],
 };
 
 const recipeIdeas = [
@@ -39,7 +39,7 @@ const recipeIdeas = [
   {
     name: "Spaghetti Carbonara",
     ingredients: ["pasta", "minced chicken", "milk", "butter", "cheese"],
-    optional: ["sausage", "sugar"],
+    optional: ["sausage"],
   },
   {
     name: "Egg sandwich",
@@ -247,7 +247,7 @@ export default function App() {
     },
     chores: {
       title: "Chores",
-      subtitle: "Tap the empty box when done. Poof.",
+      subtitle: "Tap the box when done. Poof.",
       placeholder: "Add chore",
       icon: "✅",
     },
@@ -274,6 +274,12 @@ export default function App() {
       subtitle: "Small victories and family memories.",
       placeholder: "Add win",
       icon: "🏆",
+    },
+    notes: {
+      title: "Little Notes",
+      subtitle: "Tiny thoughts, reminders, and fridge-door things.",
+      placeholder: "Add note",
+      icon: "📝",
     },
   };
 
@@ -356,7 +362,7 @@ export default function App() {
       }));
 
       setTimeout(() => setPoofMessage(""), 1200);
-    }, 350);
+    }, 300);
   }
 
   function deleteItem(tab, indexToDelete) {
@@ -541,6 +547,13 @@ export default function App() {
     return item;
   }
 
+  function getAddBoxClassName() {
+    if (activeTab === "todos") return "add-box task-add-box";
+    if (activeTab === "chores") return "add-box chore-add-box";
+    if (activeTab === "nextup") return "add-box next-add-box";
+    return "add-box";
+  }
+
   const currentPage = pageInfo[activeTab];
   const currentItems = getCurrentItems();
 
@@ -646,11 +659,11 @@ export default function App() {
               <div className="family-doodle">🍽️</div>
             </section>
 
-            <section className="dashboard-notes">
+            <section className="dashboard-notes" onClick={() => openTab("notes")}>
               <div className="notes-header">
                 <div>
                   <h2>Little Notes</h2>
-                  <p>Put your thoughts here</p>
+                  <p>Tap to add or edit notes</p>
                 </div>
                 <span>📝</span>
               </div>
@@ -675,15 +688,7 @@ export default function App() {
               </div>
             </section>
 
-            <section
-              className={
-                activeTab === "nextup" ||
-                activeTab === "todos" ||
-                activeTab === "chores"
-                  ? "add-box smart-add-box"
-                  : "add-box"
-              }
-            >
+            <section className={getAddBoxClassName()}>
               <input
                 value={newItem}
                 onChange={(event) => setNewItem(event.target.value)}
@@ -691,8 +696,8 @@ export default function App() {
               />
 
               {(activeTab === "nextup" || activeTab === "todos") && (
-                <label className="date-field">
-                  <span>{activeTab === "todos" ? "Deadline?" : "When?"}</span>
+                <label className="mini-field">
+                  <span>{activeTab === "todos" ? "Deadline" : "When"}</span>
                   <input
                     type="date"
                     value={newDate}
@@ -702,8 +707,8 @@ export default function App() {
               )}
 
               {(activeTab === "todos" || activeTab === "chores") && (
-                <label className="assignee-field">
-                  <span>Who?</span>
+                <label className="mini-field">
+                  <span>Who</span>
                   <select
                     value={newAssignee}
                     onChange={(event) => setNewAssignee(event.target.value)}
@@ -727,8 +732,7 @@ export default function App() {
 
                 {mealSuggestions.length === 0 ? (
                   <div className="empty-suggestion">
-                    Add more groceries first. Try rice, eggs, chicken, bread or
-                    milk.
+                    Add more groceries first. Try rice, eggs, chicken, bread or milk.
                   </div>
                 ) : (
                   <div className="suggestion-list">
@@ -771,24 +775,32 @@ export default function App() {
                         />
 
                         {(activeTab === "nextup" || activeTab === "todos") && (
-                          <input
-                            type="date"
-                            value={editDate}
-                            onChange={(event) => setEditDate(event.target.value)}
-                          />
+                          <label className="mini-field edit-mini-field">
+                            <span>
+                              {activeTab === "todos" ? "Deadline" : "When"}
+                            </span>
+                            <input
+                              type="date"
+                              value={editDate}
+                              onChange={(event) => setEditDate(event.target.value)}
+                            />
+                          </label>
                         )}
 
                         {(activeTab === "todos" || activeTab === "chores") && (
-                          <select
-                            value={editAssignee}
-                            onChange={(event) =>
-                              setEditAssignee(event.target.value)
-                            }
-                          >
-                            {householdMembers.map((member) => (
-                              <option key={member}>{member}</option>
-                            ))}
-                          </select>
+                          <label className="mini-field edit-mini-field">
+                            <span>Who</span>
+                            <select
+                              value={editAssignee}
+                              onChange={(event) =>
+                                setEditAssignee(event.target.value)
+                              }
+                            >
+                              {householdMembers.map((member) => (
+                                <option key={member}>{member}</option>
+                              ))}
+                            </select>
+                          </label>
                         )}
 
                         <div className="edit-actions">
