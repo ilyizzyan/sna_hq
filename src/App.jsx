@@ -22,17 +22,35 @@ const startingData = {
   meals: ["Lunch: Chicken soup", "Dinner: Fried rice"],
   kids: ["Practised writing name", "Asked why the moon changes shape"],
   wins: ["Survived a no-screen evening", "Made a family plan"],
-  notes: [
-    "things to pack"
-  ]
+  notes: ["things to pack"],
 };
 
 const recipeIdeas = [
-  { name: "Nasi Goreng", ingredients: ["rice", "egg"], optional: ["chicken", "carrot", "onion"] },
-  { name: "Sup Ayam", ingredients: ["chicken"], optional: ["carrot", "potato", "onion"] },
-  { name: "Spagetthi Carbonara", ingredients: ["Pasta", "Minced Chicken", "milk", "Butter", "Cheese"], optional: ["Sausage", "sugar"] },
-  { name: "Egg sandwich", ingredients: ["egg", "bread"], optional: ["cheese", "mayo"] },
-  { name: "Chicken porridge", ingredients: ["rice", "chicken"], optional: ["ginger", "carrot"] },
+  {
+    name: "Nasi Goreng",
+    ingredients: ["rice", "egg"],
+    optional: ["chicken", "carrot", "onion"],
+  },
+  {
+    name: "Sup Ayam",
+    ingredients: ["chicken"],
+    optional: ["carrot", "potato", "onion"],
+  },
+  {
+    name: "Spaghetti Carbonara",
+    ingredients: ["pasta", "minced chicken", "milk", "butter", "cheese"],
+    optional: ["sausage", "sugar"],
+  },
+  {
+    name: "Egg sandwich",
+    ingredients: ["egg", "bread"],
+    optional: ["cheese", "mayo"],
+  },
+  {
+    name: "Chicken porridge",
+    ingredients: ["rice", "chicken"],
+    optional: ["ginger", "carrot"],
+  },
 ];
 
 function getDaysDifference(dateString) {
@@ -61,6 +79,7 @@ function getDateCountdown(dateString) {
 
 function getGreeting() {
   const hour = new Date().getHours();
+
   if (hour < 12) return "Good morning";
   if (hour < 18) return "Good afternoon";
   return "Good evening";
@@ -72,6 +91,7 @@ function findMeal(meals, mealType) {
   );
 
   if (!foundMeal) return "Not planned yet";
+
   return foundMeal.replace(`${mealType}:`, "").trim();
 }
 
@@ -81,11 +101,11 @@ function getMealSuggestions(groceries) {
   return recipeIdeas
     .map((recipe) => {
       const matchedRequired = recipe.ingredients.filter((ingredient) =>
-        pantry.some((item) => item.includes(ingredient))
+        pantry.some((item) => item.includes(ingredient.toLowerCase()))
       );
 
       const matchedOptional = recipe.optional.filter((ingredient) =>
-        pantry.some((item) => item.includes(ingredient))
+        pantry.some((item) => item.includes(ingredient.toLowerCase()))
       );
 
       return {
@@ -104,6 +124,10 @@ export default function App() {
   const greeting = getGreeting();
   const [activeTab, setActiveTab] = useState("home");
 
+  const [displayName, setDisplayName] = useState(() => {
+    return localStorage.getItem("sna-hq-display-name") || "Mami";
+  });
+
   const [data, setData] = useState(() => {
     const savedData = localStorage.getItem("sna-hq-data");
 
@@ -114,6 +138,15 @@ export default function App() {
     return {
       ...startingData,
       ...parsedData,
+
+      dates: Array.isArray(parsedData.dates)
+        ? parsedData.dates.map((dateItem) =>
+            typeof dateItem === "string"
+              ? { title: dateItem, date: "" }
+              : dateItem
+          )
+        : startingData.dates,
+
       chores: Array.isArray(parsedData.chores)
         ? parsedData.chores.map((chore) =>
             typeof chore === "string"
@@ -121,6 +154,7 @@ export default function App() {
               : { assignedTo: "Everyone", ...chore }
           )
         : startingData.chores,
+
       todos: Array.isArray(parsedData.todos)
         ? parsedData.todos.map((todo) =>
             typeof todo === "string"
@@ -128,26 +162,47 @@ export default function App() {
               : { assignedTo: "Everyone", ...todo }
           )
         : startingData.todos,
-        notes: Array.isArray(parsedData.notes)
-          ? parsedData.notes
-          : startingData.notes,
+
+      groceries: Array.isArray(parsedData.groceries)
+        ? parsedData.groceries
+        : startingData.groceries,
+
+      meals: Array.isArray(parsedData.meals)
+        ? parsedData.meals
+        : startingData.meals,
+
+      kids: Array.isArray(parsedData.kids)
+        ? parsedData.kids
+        : startingData.kids,
+
+      wins: Array.isArray(parsedData.wins)
+        ? parsedData.wins
+        : startingData.wins,
+
+      notes: Array.isArray(parsedData.notes)
+        ? parsedData.notes
+        : startingData.notes,
     };
   });
 
   const [newItem, setNewItem] = useState("");
   const [newDate, setNewDate] = useState("");
-  const [newAssignee, setNewAssignee] = useState("Ily");
+  const [newAssignee, setNewAssignee] = useState("Mami");
 
   const [editing, setEditing] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [editDate, setEditDate] = useState("");
-  const [editAssignee, setEditAssignee] = useState("Ily");
+  const [editAssignee, setEditAssignee] = useState("Mami");
 
   const [poofMessage, setPoofMessage] = useState("");
 
   useEffect(() => {
     localStorage.setItem("sna-hq-data", JSON.stringify(data));
   }, [data]);
+
+  useEffect(() => {
+    localStorage.setItem("sna-hq-display-name", displayName);
+  }, [displayName]);
 
   const unfinishedChores = data.chores.filter((chore) => !chore.done);
 
@@ -222,10 +277,18 @@ export default function App() {
     },
   };
 
+  function changeDisplayName() {
+    const newName = window.prompt("What should SnA HQ call you?", displayName);
+
+    if (newName && newName.trim()) {
+      setDisplayName(newName.trim());
+    }
+  }
+
   function openTab(tabName) {
     setNewItem("");
     setNewDate("");
-    setNewAssignee("Ily");
+    setNewAssignee("Mami");
     cancelEdit();
     setActiveTab(tabName);
   }
@@ -238,6 +301,7 @@ export default function App() {
         ...data,
         dates: [...data.dates, { title: newItem, date: newDate }],
       });
+
       setNewItem("");
       setNewDate("");
       return;
@@ -251,6 +315,7 @@ export default function App() {
           { text: newItem, deadline: newDate, assignedTo: newAssignee },
         ],
       });
+
       setNewItem("");
       setNewDate("");
       return;
@@ -264,6 +329,7 @@ export default function App() {
           { text: newItem, done: false, assignedTo: newAssignee },
         ],
       });
+
       setNewItem("");
       return;
     }
@@ -272,6 +338,7 @@ export default function App() {
       ...data,
       [activeTab]: [...data[activeTab], newItem],
     });
+
     setNewItem("");
   }
 
@@ -300,6 +367,7 @@ export default function App() {
         ...data,
         chores: data.chores.filter((chore) => chore !== choreToDelete),
       });
+
       return;
     }
 
@@ -310,6 +378,7 @@ export default function App() {
         ...data,
         dates: data.dates.filter((dateItem) => dateItem !== dateToDelete),
       });
+
       return;
     }
 
@@ -320,6 +389,7 @@ export default function App() {
         ...data,
         todos: data.todos.filter((todo) => todo !== todoToDelete),
       });
+
       return;
     }
 
@@ -335,7 +405,7 @@ export default function App() {
     if (tab === "nextup") {
       setEditValue(item.title);
       setEditDate(item.date || "");
-      setEditAssignee("Ily");
+      setEditAssignee("Mami");
       return;
     }
 
@@ -355,14 +425,14 @@ export default function App() {
 
     setEditValue(item);
     setEditDate("");
-    setEditAssignee("Ily");
+    setEditAssignee("Mami");
   }
 
   function cancelEdit() {
     setEditing(null);
     setEditValue("");
     setEditDate("");
-    setEditAssignee("Ily");
+    setEditAssignee("Mami");
   }
 
   function saveEdit() {
@@ -462,7 +532,9 @@ export default function App() {
 
     if (activeTab === "nextup") {
       return `${item.title}${
-        item.date ? ` • ${item.date} • ${getDateCountdown(item.date)}` : " • No date"
+        item.date
+          ? ` • ${item.date} • ${getDateCountdown(item.date)}`
+          : " • No date"
       }`;
     }
 
@@ -477,7 +549,9 @@ export default function App() {
       <div className="phone">
         <header className="top-header">
           <div className="brand-copy">
-          <p className="greeting">{greeting}, {displayName}! 👋</p>
+            <p className="greeting">
+              {greeting}, {displayName}! 👋
+            </p>
 
             <div className="brand-row">
               <h1>SnA HQ</h1>
@@ -515,7 +589,9 @@ export default function App() {
                       {todo.text}
                       <small>
                         {todo.assignedTo} •{" "}
-                        {todo.deadline ? getDateCountdown(todo.deadline) : "No deadline"}
+                        {todo.deadline
+                          ? getDateCountdown(todo.deadline)
+                          : "No deadline"}
                       </small>
                     </li>
                   ))}
@@ -524,7 +600,10 @@ export default function App() {
                 <div className="card-button">View Tasks ›</div>
               </button>
 
-              <button className="feature-card chores-preview-card" onClick={() => openTab("chores")}>
+              <button
+                className="feature-card chores-preview-card"
+                onClick={() => openTab("chores")}
+              >
                 <div className="round-icon">🧺</div>
                 <p>Chores</p>
                 <span>Today’s list</span>
@@ -548,7 +627,11 @@ export default function App() {
               <div>
                 <h2>Next Up</h2>
                 <p>{nextDate?.title || "Nothing added yet"}</p>
-                <p>{nextDate?.date ? getDateCountdown(nextDate.date) : "Add your first date"}</p>
+                <p>
+                  {nextDate?.date
+                    ? getDateCountdown(nextDate.date)
+                    : "Add your first date"}
+                </p>
               </div>
               <div className="family-doodle">⏰</div>
             </section>
@@ -562,24 +645,25 @@ export default function App() {
               </div>
               <div className="family-doodle">🍽️</div>
             </section>
-            <section className="dashboard-notes">
-  <div className="notes-header">
-    <div>
-      <h2>Little Notes</h2>
-      <p>Put your thoughts here</p>
-    </div>
-    <span>📝</span>
-  </div>
 
-  <div className="note-bubbles">
-    {data.notes.slice(0, 3).map((note, index) => (
-      <div className="note-bubble" key={index}>
-        <span>🌷</span>
-        <p>{note}</p>
-      </div>
-    ))}
-  </div>
-</section>
+            <section className="dashboard-notes">
+              <div className="notes-header">
+                <div>
+                  <h2>Little Notes</h2>
+                  <p>Put your thoughts here</p>
+                </div>
+                <span>📝</span>
+              </div>
+
+              <div className="note-bubbles">
+                {(data.notes || []).slice(0, 3).map((note, index) => (
+                  <div className="note-bubble" key={index}>
+                    <span>🌷</span>
+                    <p>{note}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
           </main>
         ) : (
           <main className="page">
@@ -593,7 +677,9 @@ export default function App() {
 
             <section
               className={
-                activeTab === "nextup" || activeTab === "todos" || activeTab === "chores"
+                activeTab === "nextup" ||
+                activeTab === "todos" ||
+                activeTab === "chores"
                   ? "add-box smart-add-box"
                   : "add-box"
               }
@@ -641,7 +727,8 @@ export default function App() {
 
                 {mealSuggestions.length === 0 ? (
                   <div className="empty-suggestion">
-                    Add more groceries first. Try rice, eggs, chicken, bread or milk.
+                    Add more groceries first. Try rice, eggs, chicken, bread or
+                    milk.
                   </div>
                 ) : (
                   <div className="suggestion-list">
@@ -651,10 +738,16 @@ export default function App() {
                           <strong>{recipe.name}</strong>
                           <span>
                             You have:{" "}
-                            {[...recipe.matchedRequired, ...recipe.matchedOptional].join(", ")}
+                            {[
+                              ...recipe.matchedRequired,
+                              ...recipe.matchedOptional,
+                            ].join(", ")}
                           </span>
                         </div>
-                        <button onClick={() => addSuggestionToMeals(recipe.name)}>Add</button>
+
+                        <button onClick={() => addSuggestionToMeals(recipe.name)}>
+                          Add
+                        </button>
                       </div>
                     ))}
                   </div>
@@ -664,7 +757,8 @@ export default function App() {
 
             <section className="list">
               {currentItems.map((item, index) => {
-                const isEditing = editing?.tab === activeTab && editing?.index === index;
+                const isEditing =
+                  editing?.tab === activeTab && editing?.index === index;
 
                 return (
                   <div className="list-item" key={index}>
@@ -687,7 +781,9 @@ export default function App() {
                         {(activeTab === "todos" || activeTab === "chores") && (
                           <select
                             value={editAssignee}
-                            onChange={(event) => setEditAssignee(event.target.value)}
+                            onChange={(event) =>
+                              setEditAssignee(event.target.value)
+                            }
                           >
                             {householdMembers.map((member) => (
                               <option key={member}>{member}</option>
@@ -704,7 +800,10 @@ export default function App() {
                       <>
                         <div className="list-main">
                           {activeTab === "chores" ? (
-                            <button className="empty-check" onClick={() => completeChore(index)}>
+                            <button
+                              className="empty-check"
+                              onClick={() => completeChore(index)}
+                            >
                               ✓
                             </button>
                           ) : (
@@ -715,8 +814,14 @@ export default function App() {
                         </div>
 
                         <div className="item-actions">
-                          <button onClick={() => startEdit(activeTab, index, item)}>✎</button>
-                          <button onClick={() => deleteItem(activeTab, index)}>×</button>
+                          <button
+                            onClick={() => startEdit(activeTab, index, item)}
+                          >
+                            ✎
+                          </button>
+                          <button onClick={() => deleteItem(activeTab, index)}>
+                            ×
+                          </button>
                         </div>
                       </>
                     )}
