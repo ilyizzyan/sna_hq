@@ -477,7 +477,7 @@ export default function App() {
       <div className="phone">
         <header className="top-header">
           <div className="brand-copy">
-          <p className="greeting">{greeting}, Ily! 👋</p>
+          <p className="greeting">{greeting}, {displayName}! 👋</p>
 
             <div className="brand-row">
               <h1>SnA HQ</h1>
@@ -493,8 +493,8 @@ export default function App() {
             </div>
           </div>
 
-          <button className="profile" onClick={() => openTab("home")}>
-            I
+          <button className="profile" onClick={changeDisplayName}>
+            {displayName.charAt(0).toUpperCase()}
           </button>
         </header>
 
