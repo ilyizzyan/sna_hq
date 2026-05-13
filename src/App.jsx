@@ -187,7 +187,7 @@ export default function App() {
 
   const [newItem, setNewItem] = useState("");
   const [newDate, setNewDate] = useState("");
-  const [newAssignee, setNewAssignee] = useState("Mami");
+  const [newAssignee, setNewAssignee] = useState("");
 
   const [editing, setEditing] = useState(null);
   const [editValue, setEditValue] = useState("");
@@ -294,7 +294,7 @@ export default function App() {
   function openTab(tabName) {
     setNewItem("");
     setNewDate("");
-    setNewAssignee("Mami");
+    setNewAssignee("");
     cancelEdit();
     setActiveTab(tabName);
   }
@@ -318,12 +318,17 @@ export default function App() {
         ...data,
         todos: [
           ...data.todos,
-          { text: newItem, deadline: newDate, assignedTo: newAssignee },
+          {
+            text: newItem,
+            deadline: newDate,
+            assignedTo: newAssignee || "Everyone",
+          },
         ],
       });
 
       setNewItem("");
       setNewDate("");
+      setNewAssignee("");
       return;
     }
 
@@ -332,11 +337,16 @@ export default function App() {
         ...data,
         chores: [
           ...data.chores,
-          { text: newItem, done: false, assignedTo: newAssignee },
+          {
+            text: newItem,
+            done: false,
+            assignedTo: newAssignee || "Everyone",
+          },
         ],
       });
 
       setNewItem("");
+      setNewAssignee("");
       return;
     }
 
@@ -473,7 +483,7 @@ export default function App() {
                 ...todo,
                 text: editValue,
                 deadline: editDate,
-                assignedTo: editAssignee,
+                assignedTo: editAssignee || "Everyone",
               }
             : todo
         ),
@@ -490,7 +500,11 @@ export default function App() {
         ...data,
         chores: data.chores.map((chore) =>
           chore === choreToEdit
-            ? { ...chore, text: editValue, assignedTo: editAssignee }
+            ? {
+                ...chore,
+                text: editValue,
+                assignedTo: editAssignee || "Everyone",
+              }
             : chore
         ),
       });
@@ -587,51 +601,60 @@ export default function App() {
 
         {activeTab === "home" ? (
           <main className="dashboard">
-            <section className="main-cards">
+            <section className="wide-dashboard-list">
               <button
-                className="feature-card important-card"
+                className="wide-card todo-wide-card"
                 onClick={() => openTab("todos")}
               >
-                <div className="round-icon">⭐</div>
-                <p>Important</p>
-                <span>Top deadlines</span>
+                <div className="home-icon">⭐</div>
 
-                <ul className="todo-preview">
-                  {sortedTodos.slice(0, 3).map((todo, index) => (
-                    <li key={index}>
-                      {todo.text}
-                      <small>
-                        {todo.assignedTo} •{" "}
-                        {todo.deadline
-                          ? getDateCountdown(todo.deadline)
-                          : "No deadline"}
-                      </small>
-                    </li>
-                  ))}
-                </ul>
+                <div className="wide-card-content">
+                  <div className="wide-card-heading">
+                    <h2>Important To-Do</h2>
+                    <span>Top deadlines</span>
+                  </div>
 
-                <div className="card-button">View Tasks ›</div>
+                  <div className="mini-list">
+                    {sortedTodos.slice(0, 2).map((todo, index) => (
+                      <p key={index}>
+                        {todo.text}
+                        <small>
+                          {todo.assignedTo} •{" "}
+                          {todo.deadline
+                            ? getDateCountdown(todo.deadline)
+                            : "No deadline"}
+                        </small>
+                      </p>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="family-doodle">›</div>
               </button>
 
               <button
-                className="feature-card chores-preview-card"
+                className="wide-card chores-wide-card"
                 onClick={() => openTab("chores")}
               >
-                <div className="round-icon">🧺</div>
-                <p>Chores</p>
-                <span>Today’s list</span>
+                <div className="home-icon">🧺</div>
 
-                <ul className="chore-preview">
-                  {unfinishedChores.slice(0, 3).map((chore, index) => (
-                    <li key={index}>
-                      <span className="tiny-box" />
-                      {chore.text}
-                      <small>{chore.assignedTo}</small>
-                    </li>
-                  ))}
-                </ul>
+                <div className="wide-card-content">
+                  <div className="wide-card-heading">
+                    <h2>Chores</h2>
+                    <span>Today’s list</span>
+                  </div>
 
-                <div className="card-button coral">View Chores ›</div>
+                  <div className="mini-list">
+                    {unfinishedChores.slice(0, 2).map((chore, index) => (
+                      <p key={index}>
+                        {chore.text}
+                        <small>{chore.assignedTo}</small>
+                      </p>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="family-doodle">›</div>
               </button>
             </section>
 
@@ -713,8 +736,14 @@ export default function App() {
                     value={newAssignee}
                     onChange={(event) => setNewAssignee(event.target.value)}
                   >
+                    <option value="" disabled>
+                      Assign to...
+                    </option>
+
                     {householdMembers.map((member) => (
-                      <option key={member}>{member}</option>
+                      <option key={member} value={member}>
+                        {member}
+                      </option>
                     ))}
                   </select>
                 </label>
@@ -797,7 +826,9 @@ export default function App() {
                               }
                             >
                               {householdMembers.map((member) => (
-                                <option key={member}>{member}</option>
+                                <option key={member} value={member}>
+                                  {member}
+                                </option>
                               ))}
                             </select>
                           </label>

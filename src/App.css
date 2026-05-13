@@ -135,105 +135,76 @@ button {
   padding: 0 18px 14px;
 }
 
-.main-cards {
+.wide-dashboard-list {
   display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
 
-.feature-card {
-  min-height: 162px;
+.wide-card {
+  width: 100%;
   border: none;
-  border-radius: 22px;
-  padding: 13px;
-  text-align: left;
-  color: white;
-  overflow: hidden;
-  box-shadow: 0 12px 26px rgba(143, 58, 91, 0.12);
-}
-
-.important-card {
-  background: linear-gradient(135deg, #18b99c, #10a990);
-  display: flex;
-  flex-direction: column;
-}
-
-.chores-preview-card {
-  background: linear-gradient(135deg, #ff7b90, #ff9a6c);
-  display: flex;
-  flex-direction: column;
-}
-
-.round-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.92);
-  display: grid;
-  place-items: center;
-  font-size: 22px;
-  margin-bottom: 7px;
-}
-
-.feature-card p {
   margin: 0;
-  font-size: 15px;
+  background: white;
+  border-radius: 20px;
+  padding: 12px;
+  min-height: 92px;
+  display: grid;
+  grid-template-columns: 46px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  box-shadow: 0 10px 24px rgba(143, 58, 91, 0.08);
+  cursor: pointer;
+  border: 2px solid #ffe0ec;
+}
+
+.todo-wide-card {
+  background: linear-gradient(135deg, #f0fff9, #ffffff);
+}
+
+.chores-wide-card {
+  background: linear-gradient(135deg, #fff4f7, #ffffff);
+}
+
+.wide-card-content {
+  min-width: 0;
+}
+
+.wide-card-heading h2 {
+  margin: 0;
+  font-size: 16px;
+  color: #26104d;
   font-weight: 900;
 }
 
-.feature-card span {
+.wide-card-heading span {
   display: block;
-  margin-top: 1px;
+  margin-top: 2px;
+  color: #7b6680;
   font-size: 11px;
-  font-weight: 700;
-  opacity: 0.9;
+  font-weight: 800;
 }
 
-.todo-preview,
-.chore-preview {
-  margin: 8px 0;
-  padding-left: 15px;
+.mini-list {
+  margin-top: 7px;
   display: grid;
   gap: 4px;
 }
 
-.todo-preview li,
-.chore-preview li {
-  font-size: 10.5px;
+.mini-list p {
+  margin: 0;
+  color: #26104d;
+  font-size: 12px;
   font-weight: 900;
-  line-height: 1.1;
+  line-height: 1.15;
 }
 
-.todo-preview small,
-.chore-preview small {
+.mini-list small {
   display: block;
-  font-size: 9px;
-  opacity: 0.85;
+  color: #7b6680;
+  font-size: 10.5px;
+  font-weight: 800;
   margin-top: 1px;
-}
-
-.tiny-box {
-  display: inline-block;
-  width: 9px;
-  height: 9px;
-  border: 2px solid white;
-  border-radius: 3px;
-  margin-right: 5px;
-}
-
-.card-button {
-  background: #281450;
-  color: white;
-  border-radius: 12px;
-  padding: 8px 10px;
-  font-size: 11px;
-  font-weight: 900;
-  text-align: center;
-  margin-top: auto;
-}
-
-.card-button.coral {
-  background: rgba(225, 57, 63, 0.42);
 }
 
 .next-card,
