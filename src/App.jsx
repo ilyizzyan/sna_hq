@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { supabase } from "./supabaseClient";
 import "./App.css";
 
 const householdMembers = ["Mami", "Bapak", "Sophea", "Sara", "Everyone"];
@@ -120,8 +121,73 @@ function getMealSuggestions(groceries) {
     .sort((a, b) => b.score - a.score);
 }
 
+function LoginScreen() {
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function loginWithEmail() {
+    if (!email.trim()) {
+      setMessage("Enter your email first.");
+      return;
+    }
+
+    setLoading(true);
+    setMessage("");
+
+    const { error } = await supabase.auth.signInWithOtp({
+      email: email.trim(),
+      options: {
+        emailRedirectTo: window.location.origin,
+      },
+    });
+
+    setLoading(false);
+
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+
+    setMessage("Check your email. Tap the login link to enter SnA HQ.");
+  }
+
+  return (
+    <div className="screen">
+      <div className="phone login-phone">
+        <div className="login-card">
+          <div className="login-stickers">
+            <span>🌸</span>
+            <span>🧸</span>
+            <span>🌈</span>
+          </div>
+
+          <h1>SnA HQ</h1>
+          <p>Your family dashboard needs a tiny gate.</p>
+
+          <input
+            value={email}
+            type="email"
+            placeholder="Enter your email"
+            onChange={(event) => setEmail(event.target.value)}
+          />
+
+          <button onClick={loginWithEmail} disabled={loading}>
+            {loading ? "Sending..." : "Send login link"}
+          </button>
+
+          {message && <p className="login-message">{message}</p>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const greeting = getGreeting();
+  const [session, setSession] = useState(null);
+  const [checkingLogin, setCheckingLogin] = useState(true);
+
   const [activeTab, setActiveTab] = useState("home");
 
   const [displayName, setDisplayName] = useState(() => {
@@ -195,6 +261,22 @@ export default function App() {
   const [editAssignee, setEditAssignee] = useState("Mami");
 
   const [poofMessage, setPoofMessage] = useState("");
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setCheckingLogin(false);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession);
+      setCheckingLogin(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("sna-hq-data", JSON.stringify(data));
@@ -568,6 +650,23 @@ export default function App() {
     return "add-box";
   }
 
+  if (checkingLogin) {
+    return (
+      <div className="screen">
+        <div className="phone login-phone">
+          <div className="login-card">
+            <h1>SnA HQ</h1>
+            <p>Loading your family dashboard...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return <LoginScreen />;
+  }
+
   const currentPage = pageInfo[activeTab];
   const currentItems = getCurrentItems();
 
@@ -594,9 +693,18 @@ export default function App() {
             </div>
           </div>
 
-          <button className="profile" onClick={changeDisplayName}>
-            {displayName.charAt(0).toUpperCase()}
-          </button>
+          <div className="header-actions">
+            <button className="profile" onClick={changeDisplayName}>
+              {displayName.charAt(0).toUpperCase()}
+            </button>
+
+            <button
+              className="logout-button"
+              onClick={() => supabase.auth.signOut()}
+            >
+              Logout
+            </button>
+          </div>
         </header>
 
         {activeTab === "home" ? (
